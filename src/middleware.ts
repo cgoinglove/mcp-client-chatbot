@@ -15,11 +15,10 @@ export async function middleware(request: NextRequest) {
     req: request,
     secret: process.env.AUTH_SECRET,
     secureCookie:
-      process.env.DEPLOY_ENV === "local"
+      process.env.NO_HTTPS == "true"
         ? false
         : process.env.NODE_ENV === "production",
   });
-
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

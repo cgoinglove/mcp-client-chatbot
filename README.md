@@ -112,11 +112,10 @@ Visualize chatbot responses as pie, bar, or line charts using the built-in tool 
 * **💬 Intuitive Mentions + Tool Control:** Trigger tools with `@`, and control when they're used via `Auto` / `Manual` / `None` modes.
 * **⚙️ Easy Server Setup:** Configure MCP connections via UI or `.mcp-config.json` file.
 * **📄 Markdown UI:** Communicate in a clean, readable markdown-based interface.
-* **💾 Zero-Setup Local DB:** Uses SQLite by default for local storage (PostgreSQL also supported).
 * **🧩 Custom MCP Server Support:** Modify the built-in MCP server logic or create your own.
 * **📊 Built-in Chart Tools:** Generate pie, bar, and line charts directly in chat with natural prompts.
-
-
+* **Easy Deployment:** with vercel support baked in it makes an easily accesible chatbot. 
+* **Run anywhere:** with docker support just build the image and start docker compose and you are good to go
 ## 🚀 Getting Started
 
 This project uses [pnpm](https://pnpm.io/) as the recommended package manager.
@@ -149,9 +148,10 @@ The `pnpm initial` command generates a `.env` file. Add your API keys there:
 GOOGLE_GENERATIVE_AI_API_KEY=****
 OPENAI_API_KEY=****
 # ANTHROPIC_API_KEY=****
+AUTH_SECRET=
+POSTGRES_URL=
 ```
-
-SQLite is the default DB (`db.sqlite`). To use PostgreSQL, set `USE_FILE_SYSTEM_DB=false` and define `POSTGRES_URL` in `.env`.
+for auth secret run `pnpx auth secret`
 
 -----
 
@@ -160,8 +160,8 @@ SQLite is the default DB (`db.sqlite`). To use PostgreSQL, set `USE_FILE_SYSTEM_
 You can connect MCP tools via:
 
 1. **UI Setup:** Go to http://localhost:3000/mcp and configure through the interface.
-2. **Direct File Edit:** Modify `.mcp-config.json` in project root.
-3. **Custom Logic:** Edit `./custom-mcp-server/index.ts` to implement your own logic.
+2. **Direct File Edit:** Modify `.mcp-config.json` in project root, this doesn't work on vercel.
+3. **Custom Logic:** Edit `./custom-mcp-server/index.ts` to implement your own logic, this also doesn't run on vercel or docker.
 
 -----
 
@@ -170,7 +170,7 @@ Here are some practical tips and guides for using MCP Client Chatbot:
 
 * [Project Feature with MCP Server](./docs/tips-guides/project_with_mcp.md): Learn how to integrate system instructions and structures with MCP servers to build an agent that assists with GitHub-based project management.
 
-* [Docker Hosting Guide](#): Coming soon...
+* [Docker Hosting Guide](./docs/tips-guides/docker.md): Learn how to set up docker.
 
 -----
 

@@ -17,6 +17,7 @@ import { colorize } from "consola/utils";
 import { createDebounce, isNull, Locker, toAny } from "lib/utils";
 
 import { safe } from "ts-safe";
+import { IS_MCP_SERVER_SSE_ONLY } from "lib/const";
 
 type ClientOptions = {
   autoDisconnectSeconds?: number;
@@ -85,6 +86,7 @@ export class MCPClient {
     try {
       const startedAt = Date.now();
       this.locker.lock();
+
       const client = new Client({
         name: this.name,
         version: "1.0.0",
@@ -93,6 +95,11 @@ export class MCPClient {
       let transport: Transport;
       // Create appropriate transport based on server config type
       if (isMaybeStdioConfig(this.serverConfig)) {
+        // Skip stdio transport
+        if (IS_MCP_SERVER_SSE_ONLY) {
+          throw new Error("Stdio transport is not supported");
+        }
+
         const config = MCPStdioConfigZodSchema.parse(this.serverConfig);
         transport = new StdioClientTransport({
           command: config.command,

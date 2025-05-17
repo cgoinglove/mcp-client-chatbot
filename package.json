@@ -8,8 +8,8 @@
   "scripts": {
     "dev": "pnpm initial:check && next dev --turbopack",
     "build": "next build",
-    "build:local": "cross-env DEPLOY_ENV=local next build",
     "start": "next start",
+    "build:local": "cross-env NO_HTTPS=true AUTH_TRUST_HOST=true next build",
     "test": "vitest",
     "lint": "next lint && biome lint --write --unsafe",
     "lint:fix": "next lint --fix && biome lint --write --unsafe",
@@ -19,6 +19,7 @@
     "initial:env": "tsx scripts/copy-env.ts",
     "initial:mcp-config": "tsx scripts/generate-mcp-config.ts",
     "initial:flag-generate": "tsx scripts/flag.ts generate",
+    "postinstall": "tsx scripts/vercelPostinstall.ts",
     "initial": "pnpm install && pnpm initial:env && pnpm initial:mcp-config && pnpm db:migrate && pnpm initial:flag-generate && pnpm clean .next",
     "clean": "tsx scripts/clean.ts",
     "db:generate": "drizzle-kit generate",
@@ -36,7 +37,6 @@
     "@ai-sdk/openai": "^1.3.22",
     "@ai-sdk/react": "^1.2.12",
     "@ai-sdk/xai": "^1.2.16",
-    "@libsql/client": "^0.15.6",
     "@modelcontextprotocol/sdk": "^1.11.3",
     "@radix-ui/react-accordion": "^1.2.10",
     "@radix-ui/react-avatar": "^1.1.9",
@@ -119,5 +119,14 @@
   "packageManager": "pnpm@10.2.1",
   "engines": {
     "node": "^18.0.0 || ^20.0.0 || ^22.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@tailwindcss/oxide",
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }

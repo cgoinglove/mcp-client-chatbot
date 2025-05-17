@@ -4,12 +4,7 @@ import { colorize } from "consola/utils";
 
 config();
 
-let promise: Promise<any>;
-if (process.env.USE_FILE_SYSTEM_DB === "true") {
-  promise = import("lib/db/sqlite/migrate.sqlite");
-} else {
-  promise = import("lib/db/pg/migrate.pg");
-}
+const promise = import("lib/db/pg/migrate.pg");
 
 await promise
   .then(() => {

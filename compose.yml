@@ -1,0 +1,16 @@
+services:
+  mcp-client-chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - AUTH_TRUST_HOST=true
+      - NO_HTTPS=true
+    env_file:
+      - .env
+    dns:
+      - 8.8.8.8 # Google's public DNS server
+      - 8.8.4.4 # Google's public DNS server
+    restart: unless-stopped

@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { createDebounce, isNull, safeJSONParse } from "lib/utils";
 import { handleErrorWithToast } from "ui/shared-toast";
 import { mutate } from "swr";
-import { Loader } from "lucide-react";
+import { Loader, AlertTriangle } from "lucide-react";
 import {
   isMaybeMCPServerConfig,
   isMaybeSseConfig,
@@ -53,6 +53,7 @@ export default function MCPEditor({
   initialConfig,
   name: initialName,
 }: MCPEditorProps) {
+  const isVercelEnv = process.env.NEXT_PUBLIC_VERCEL === "1";
   const shouldInsert = useMemo(() => isNull(initialName), [initialName]);
   const [isLoading, setIsLoading] = useState(false);
   const [jsonError, setJsonError] = useState<string | null>(null);
@@ -100,6 +101,20 @@ export default function MCPEditor({
 
   // Validate
   const validateConfig = (jsonConfig: unknown): boolean => {
+    // Check if we're in Vercel environment and config contains a command
+    if (
+      process.env.NEXT_PUBLIC_VERCEL === "1" &&
+      typeof jsonConfig === "object" &&
+      jsonConfig !== null &&
+      "command" in jsonConfig
+    ) {
+      handleErrorWithToast(
+        new Error("STDIO is not supported in the Vercel environment"),
+        "mcp-editor-error",
+      );
+      return false;
+    }
+
     const result = isMaybeSseConfig(jsonConfig)
       ? MCPSseConfigZodSchema.safeParse(jsonConfig)
       : MCPStdioConfigZodSchema.safeParse(jsonConfig);
@@ -148,13 +163,26 @@ export default function MCPEditor({
     errorDebounce.clear();
     if (result.success) {
       const isDiff = !equal(result.value, config);
-      setConfig(result.value as MCPServerConfig);
-      setJsonError(null);
-      if (isDiff) {
-        convertDebounce(
-          () => setJsonString(JSON.stringify(result.value, null, 2)),
-          5000,
+
+      // Check if we're in Vercel environment and config contains a command
+      if (
+        process.env.NEXT_PUBLIC_VERCEL === "1" &&
+        typeof result.value === "object" &&
+        result.value !== null &&
+        "command" in result.value
+      ) {
+        setJsonError(
+          "Command execution is not allowed in the Vercel environment",
         );
+      } else {
+        setConfig(result.value as MCPServerConfig);
+        setJsonError(null);
+        if (isDiff) {
+          convertDebounce(
+            () => setJsonString(JSON.stringify(result.value, null, 2)),
+            5000,
+          );
+        }
       }
     } else if (data.trim() !== "") {
       errorDebounce(() => {
@@ -188,6 +216,16 @@ export default function MCPEditor({
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="config">Config</Label>
+          {isVercelEnv && (
+            <Alert className="mb-2">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Vercel Environment Detected</AlertTitle>
+              <AlertDescription>
+                Command execution configurations are not allowed in the Vercel
+                environment. Please use SSE configurations instead.
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
 
         {/* Split view for config editor */}

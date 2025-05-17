@@ -1,7 +1,15 @@
 import { ChatMessage, Project } from "app-types/chat";
 import { UserPreferences } from "app-types/user";
+import { MCPServerConfig } from "app-types/mcp";
 import { sql } from "drizzle-orm";
-import { pgTable, text, timestamp, json, uuid } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  json,
+  uuid,
+  boolean,
+} from "drizzle-orm/pg-core";
 
 export const ChatThreadSchema = pgTable("chat_thread", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -48,17 +56,17 @@ export const UserSchema = pgTable("user", {
   updatedAt: timestamp("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
-// export const McpServerSchema = pgTable("mcp_server", {
-//   id: uuid("id").primaryKey().notNull().defaultRandom(),
-//   name: text("name").notNull(),
-//   config: json("config").notNull(),
-//   enabled: boolean("enabled").notNull().default(true),
-//   createdAt: timestamp("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
-//   updatedAt: timestamp("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
-// });
+export const McpServerSchema = pgTable("mcp_server", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: text("name").notNull(),
+  config: json("config").notNull().$type<MCPServerConfig>(),
+  enabled: boolean("enabled").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+});
 
+export type McpServerEntity = typeof McpServerSchema.$inferSelect;
 export type ChatThreadEntity = typeof ChatThreadSchema.$inferSelect;
 export type ChatMessageEntity = typeof ChatMessageSchema.$inferSelect;
 export type ProjectEntity = typeof ProjectSchema.$inferSelect;
 export type UserEntity = typeof UserSchema.$inferSelect;
-// export type McpServerEntity = typeof McpServerSchema.$inferSelect;
