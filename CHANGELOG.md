@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.1](https://github.com/cgoinglove/mcp-client-chatbot/compare/v1.8.0...v1.8.1) (2025-06-12)
+
+
+### Bug Fixes
+
+* temporary chat initial model ([0393f7a](https://github.com/cgoinglove/mcp-client-chatbot/commit/0393f7a190463faf58cbfbca1c21d349a9ff05dc))
+* update adding-openAI-like-providers.md ([#101](https://github.com/cgoinglove/mcp-client-chatbot/issues/101)) ([2bb94e7](https://github.com/cgoinglove/mcp-client-chatbot/commit/2bb94e7df63a105e33c1d51271751c7b89fead23))
+
 ## [1.8.0](https://github.com/cgoinglove/mcp-client-chatbot/compare/v1.7.0...v1.8.0) (2025-06-11)
 
 
