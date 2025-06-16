@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/cgoinglove/mcp-client-chatbot/compare/v1.9.0...v1.10.0) (2025-06-16)
+
+
+### Features
+
+* **releases:** add debug logging to the add authors and update release step ([#105](https://github.com/cgoinglove/mcp-client-chatbot/issues/105)) ([c855a6a](https://github.com/cgoinglove/mcp-client-chatbot/commit/c855a6a94c49dfd93c9a8d1d0932aeda36bd6c7e))
+
 ## [1.9.0](https://github.com/cgoinglove/mcp-client-chatbot/compare/v1.8.0...v1.9.0) (2025-06-16)
 
 
