@@ -1501,4 +1501,19 @@
       opacity: 1;
     }
   }
+
+  .react-flow__node-default {
+    @apply bg-transparent! text-foreground! p-0! border-none! text-sm! text-left! shadow-none!;
+  }
+  .react-flow__panel.react-flow__attribution.bottom.right {
+    @apply hidden!;
+  }
+
+  .fade-300 {
+    @apply fade-in animate-in duration-300;
+  }
+
+  .transition-colors-300 {
+    @apply transition-colors duration-300;
+  }
 }

@@ -229,6 +229,26 @@ export function objectFlow<T extends Record<string, any>>(obj: T) {
     find(fn: (value: T[keyof T], key: keyof T) => any): T | undefined {
       return Object.entries(obj).find(([key, value]) => fn(value, key))?.[1];
     },
+    getByPath<U>(path: string[]): U | undefined {
+      let result: any = obj;
+      path.find((p) => {
+        result = result?.[p];
+        return !result;
+      });
+      return result;
+    },
+    setByPath(path: string[], value: any) {
+      path.reduce((acc, cur, i) => {
+        const isLast = i == path.length - 1;
+        if (isLast) {
+          acc[cur] = value;
+          return acc;
+        }
+        acc[cur] ??= {};
+        return acc[cur];
+      }, obj as object);
+      return obj;
+    },
   };
 }
 
@@ -256,4 +276,39 @@ export function convertToUIMessage(message: ChatMessage): UIMessage {
 
 export async function nextTick() {
   return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+export function cleanVariableName(input: string = ""): string {
+  if (!input || typeof input !== "string") {
+    return "";
+  }
+
+  return input.replace(/[^\w\u0080-\uFFFF-]/g, "").replace(/^[0-9]+/, "");
+}
+
+export function generateUniqueKey(key: string, existingKeys: string[]) {
+  let newKey = key;
+  let counter = 1;
+
+  while (existingKeys.includes(newKey)) {
+    const baseKey = key.replace(/\d+$/, "");
+    const hasOriginalNumber = key !== baseKey;
+    if (hasOriginalNumber) {
+      const originalNumber = parseInt(key.match(/\d+$/)?.[0] || "0");
+      newKey = baseKey + (originalNumber + counter);
+    } else {
+      newKey = baseKey + counter;
+    }
+    counter++;
+  }
+  return newKey;
+}
+
+export function exclude<T extends object, K extends keyof T>(
+  obj: T,
+  keys: K[],
+): Omit<T, K> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keys.includes(key as K)),
+  ) as Omit<T, K>;
 }
