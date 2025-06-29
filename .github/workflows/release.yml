@@ -1,3 +1,5 @@
+name: release-please
+
 on:
   push:
     branches:
@@ -6,8 +8,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-
-name: release-please
 
 jobs:
   release-please:
@@ -45,13 +45,22 @@ jobs:
           if [ -f "CHANGELOG.md" ]; then
             echo "CHANGELOG.md found. Processing to add authors..."
             while IFS= read -r line; do
-              if [[ "$line" =~ \*\ (.*)\ \(\[([a-f0-9]{7,40})\]\(.* ]]; then
+              # Check if the line already ends with " by @username"
+              if [[ "$line" =~ \)\ by\ @[[:alnum:]_-]+$ ]]; then
+                echo "  Line already has author, copying as is: $line"
+                echo "$line" >> "$TEMP_CHANGELOG"
+                continue
+              fi
+
+              # If not, check if it's a commit line and add author
+              if [[ "$line" =~ \*\ (.*)\ \(\[([a-f0-9]{7,40})\]\(.*\)\) ]]; then
                 commit_hash="${BASH_REMATCH[2]}"
                 echo "  Found commit hash: $commit_hash in line: $line"
                 github_user=$(gh api "repos/${{ github.repository }}/commits/${commit_hash}"  | jq -r '.author.login // "unknown"')
                 echo "  Fetched GitHub user for commit $commit_hash: @${github_user}"
                 echo "${line} by @${github_user}" >> "$TEMP_CHANGELOG"
               else
+                # Copy other lines without modification
                 echo "  Copying line without modification: $line"
                 echo "$line" >> "$TEMP_CHANGELOG"
               fi
@@ -75,8 +84,7 @@ jobs:
             echo "Successfully extracted release body for $RELEASE_TAG."
             echo "Release Body Preview:"
             echo "---"
-            echo "$RELEASE_BODY" | head -n 5 # Show first 5 lines of the release body
-            echo "---"
+            echo "$RELEASE_BODY" | head -n 5
             echo "---"
           fi
 
