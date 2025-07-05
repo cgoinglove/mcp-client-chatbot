@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.14.0](https://github.com/cgoinglove/mcp-client-chatbot/compare/v1.13.0...v1.14.0) (2025-07-05)
+
+
+### Features
+
+* web-search with images ([bea76b3](https://github.com/cgoinglove/mcp-client-chatbot/commit/bea76b3a544d4cf5584fa29e5c509b0aee1d4fee))
+* **workflow:** add auto layout feature for workflow nodes and update UI messages ([0cfbffd](https://github.com/cgoinglove/mcp-client-chatbot/commit/0cfbffd631c9ae5c6ed57d47ca5f34b9acbb257d))
+
+
+### Bug Fixes
+
+* **api:** handle error case in chat route by using orElse for unwrap ([25580a2](https://github.com/cgoinglove/mcp-client-chatbot/commit/25580a2a9f6c9fbc4abc29fee362dc4b4f27f9b4))
+* **workflow:** llm structure Output ([c529292](https://github.com/cgoinglove/mcp-client-chatbot/commit/c529292ddc1a4b836a5921e25103598afd7e3ab7))
+
 ## [1.13.0](https://github.com/cgoinglove/mcp-client-chatbot/compare/v1.12.1...v1.13.0) (2025-07-04)
 
 
